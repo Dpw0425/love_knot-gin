@@ -18,7 +18,7 @@ type SQLProvider struct {
 func Run(ctx *cli.Context, app *SQLProvider) error {
 	fmt.Println("数据库初始化中...")
 
-	content, err := os.ReadFile("./doc/sql/love_knot.sql")
+	content, err := os.ReadFile("./docs/sql/love_knot.sql")
 	if err != nil {
 		fmt.Println("数据库导入失败: ", err)
 		logger.Errorf("Databases Import Failed: %s", err)
