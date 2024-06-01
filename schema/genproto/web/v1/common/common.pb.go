@@ -26,7 +26,7 @@ type SendEmailCodeRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Email string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Email string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty" binding:"required"`
 }
 
 func (x *SendEmailCodeRequest) Reset() {

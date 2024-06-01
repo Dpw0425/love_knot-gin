@@ -66,6 +66,7 @@ func (c *Context) Ctx() context.Context {
 	return c.Context.Request.Context()
 }
 
+// 返回错误出现的行号
 func initMeta() map[string]any {
 	meta := make(map[string]any)
 
@@ -75,4 +76,8 @@ func initMeta() map[string]any {
 	}
 
 	return meta
+}
+
+func (c *Context) Unauthorized(message string) error {
+
 }
