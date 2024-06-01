@@ -2,9 +2,9 @@ package app
 
 import (
 	"github.com/google/wire"
-	"love_knot/internal/app/db"
+	"love_knot/internal/job"
 )
 
 var SQLProviderSet = wire.NewSet(
-	wire.Struct(new(db.SQLProvider), "*"),
+	wire.Struct(new(job.SQLProvider), "*"),
 )

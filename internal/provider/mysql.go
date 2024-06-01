@@ -5,7 +5,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"love_knot/internal/app/config"
+	"love_knot/internal/config"
 	"love_knot/pkg/logger"
 	"time"
 )
@@ -26,13 +26,13 @@ func NewMysqlClient(conf *config.Config) *gorm.DB {
 	}), gormConfig)
 
 	if err != nil {
-		logger.Panicf("Mysql Connect Error: %v", err)
+		logger.Panicf("Mysql Connect Error: %v1", err)
 		fmt.Println("Mysql Connect Error: ", err)
 		return nil
 	}
 
 	if db.Error != nil {
-		logger.Panicf("Database Error: %v", err)
+		logger.Panicf("Database Error: %v1", err)
 		fmt.Println("Database Error: ", err)
 		return nil
 	}

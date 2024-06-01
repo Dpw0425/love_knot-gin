@@ -5,8 +5,8 @@ import (
 	"github.com/urfave/cli/v2"
 	"love_knot/internal/app"
 	"love_knot/internal/app/api"
-	"love_knot/internal/app/config"
-	"love_knot/internal/app/db"
+	"love_knot/internal/config"
+	"love_knot/internal/job"
 	"love_knot/pkg/logger"
 )
 
@@ -27,7 +27,7 @@ func NewSQLCommand() app.Command {
 		Usage: "sql command - 数据库初始化",
 		Action: func(ctx *cli.Context, conf *config.Config) error {
 			logger.InitLogger(fmt.Sprintf("%s/logs/app_log", conf.Log.Path), "sql")
-			return db.Run(ctx, NewSQLInjector(conf))
+			return job.Run(ctx, NewSQLInjector(conf))
 		},
 	}
 }

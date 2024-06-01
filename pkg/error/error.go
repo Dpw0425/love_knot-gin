@@ -258,6 +258,11 @@ type MultiError struct {
 	Errors []error
 }
 
+func (e *MultiError) Error() string {
+	errByte, _ := json.Marshal(e)
+	return string(errByte)
+}
+
 func NewMultiError() *MultiError {
 	return &MultiError{
 		lock:   &sync.Mutex{},
@@ -277,9 +282,4 @@ func (e *MultiError) AppendWithLock(err error) {
 
 func (e *MultiError) HasErrors() bool {
 	return len(e.Errors) > 0
-}
-
-func (e *MultiError) Error() string {
-	errByte, _ := json.Marshal(e)
-	return string(errByte)
 }

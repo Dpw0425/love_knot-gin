@@ -21,14 +21,14 @@ type Config struct {
 func Load(filename string) *Config {
 	content, err := os.ReadFile(filename)
 	if err != nil {
-		logger.Panicf("Read Config Error: %v", err)
+		logger.Panicf("Read Config Error: %v1", err)
 		panic(err)
 	}
 
 	var conf Config
 	if yaml.Unmarshal(content, &conf) != nil {
-		logger.Panicf("Parsing Config Failed: %v", err)
-		panic(fmt.Sprintf("解析 config.yaml 失败: %v", err))
+		logger.Panicf("Parsing Config Failed: %v1", err)
+		panic(fmt.Sprintf("解析 config.yaml 失败: %v1", err))
 	}
 
 	conf.sid = encrypt.Md5(fmt.Sprintf("%d%s", time.Now().UnixNano(), random.Random(6)))

@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/urfave/cli/v2"
-	"love_knot/internal/app/config"
+	"love_knot/internal/config"
 	"os"
 )
 

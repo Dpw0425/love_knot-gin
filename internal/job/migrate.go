@@ -1,10 +1,10 @@
-package db
+package job
 
 import (
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"gorm.io/gorm"
-	"love_knot/internal/app/config"
+	"love_knot/internal/config"
 	"love_knot/pkg/logger"
 	"os"
 	"strings"

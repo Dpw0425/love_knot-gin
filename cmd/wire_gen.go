@@ -10,8 +10,8 @@ import (
 	"github.com/google/wire"
 	"love_knot/internal/app/api"
 	"love_knot/internal/app/api/router"
-	"love_knot/internal/app/config"
-	"love_knot/internal/app/db"
+	"love_knot/internal/config"
+	"love_knot/internal/job"
 	"love_knot/internal/provider"
 )
 
@@ -26,9 +26,9 @@ func NewHttpInjector(conf *config.Config) *api.AppProvider {
 	return appProvider
 }
 
-func NewSQLInjector(conf *config.Config) *db.SQLProvider {
+func NewSQLInjector(conf *config.Config) *job.SQLProvider {
 	gormDB := provider.NewMysqlClient(conf)
-	sqlProvider := &db.SQLProvider{
+	sqlProvider := &job.SQLProvider{
 		Config: conf,
 		DB:     gormDB,
 	}
