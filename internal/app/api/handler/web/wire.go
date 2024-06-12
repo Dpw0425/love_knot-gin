@@ -7,4 +7,6 @@ import (
 
 var ProviderSet = wire.NewSet(
 	wire.Struct(new(v1.Common), "*"),
+
+	wire.Struct(new(V1), "*"),
 )

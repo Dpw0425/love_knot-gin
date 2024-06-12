@@ -7,6 +7,7 @@ import (
 	"github.com/google/wire"
 	"love_knot/internal/app"
 	"love_knot/internal/app/api"
+	"love_knot/internal/app/service"
 	"love_knot/internal/config"
 	"love_knot/internal/job"
 	"love_knot/internal/provider"
@@ -16,12 +17,18 @@ var providerSet = wire.NewSet(
 	provider.NewHttpClient,
 	provider.NewRequestClient,
 	provider.NewMysqlClient,
+	provider.NewRedisClient,
+	provider.NewEmailClient,
+
+	service.ProviderSet,
+	app.CacheProviderSet,
+	app.RepoProviderSet,
 )
 
 func NewHttpInjector(conf *config.Config) *api.AppProvider {
 	panic(
 		wire.Build(
-			// providerSet,
+			providerSet,
 			api.ProviderSet,
 		),
 	)

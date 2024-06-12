@@ -3,6 +3,7 @@ package response
 import (
 	"github.com/gin-gonic/gin"
 	myErr "love_knot/pkg/error"
+	"net/http"
 )
 
 type NormalResponse struct {
@@ -17,17 +18,17 @@ type ErrorResponse struct {
 	Message string `json:"message"`    // 返回消息
 }
 
-func normal(c *gin.Context, status int, data interface{}, message string) {
+func normal(c *gin.Context, data interface{}, message string) {
 	c.Abort()
-	c.JSON(status, &NormalResponse{
-		Status:  status,
+	c.JSON(http.StatusOK, &NormalResponse{
+		Status:  http.StatusOK,
 		Data:    data,
 		Message: message,
 	})
 }
 
-func NorResponse(c *gin.Context, status int, data interface{}, message string) {
-	normal(c, status, data, message)
+func NorResponse(c *gin.Context, data interface{}, message string) {
+	normal(c, data, message)
 }
 
 func err(c *gin.Context, id string, status int, message string) {

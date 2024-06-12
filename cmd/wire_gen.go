@@ -8,8 +8,16 @@ package main
 
 import (
 	"github.com/google/wire"
+	"love_knot/internal/app"
 	"love_knot/internal/app/api"
+	"love_knot/internal/app/api/handler"
+	"love_knot/internal/app/api/handler/web"
+	"love_knot/internal/app/api/handler/web/v1"
 	"love_knot/internal/app/api/router"
+	service2 "love_knot/internal/app/service"
+	"love_knot/internal/app/service/web/v1"
+	"love_knot/internal/app/storage/cache"
+	"love_knot/internal/app/storage/repo"
 	"love_knot/internal/config"
 	"love_knot/internal/job"
 	"love_knot/internal/provider"
@@ -18,7 +26,31 @@ import (
 // Injectors from wire.go:
 
 func NewHttpInjector(conf *config.Config) *api.AppProvider {
-	engine := router.NewRouter(conf)
+	client := provider.NewRedisClient(conf)
+	emailStorage := cache.NewEmailStorage(client)
+	db := provider.NewMysqlClient(conf)
+	userRepo := repo.NewUsers(db)
+	templateService := &service.TemplateService{}
+	emailClient := provider.NewEmailClient(conf)
+	emailService := &service.EmailService{
+		Storage:  emailStorage,
+		UserRepo: userRepo,
+		Template: templateService,
+		Client:   emailClient,
+	}
+	common := &v1.Common{
+		EmailService: emailService,
+	}
+	webV1 := &web.V1{
+		Common: common,
+	}
+	webHandler := &web.Handler{
+		V1: webV1,
+	}
+	handlerHandler := &handler.Handler{
+		Web: webHandler,
+	}
+	engine := router.NewRouter(conf, handlerHandler)
 	appProvider := &api.AppProvider{
 		Config: conf,
 		Engine: engine,
@@ -27,14 +59,14 @@ func NewHttpInjector(conf *config.Config) *api.AppProvider {
 }
 
 func NewSQLInjector(conf *config.Config) *job.SQLProvider {
-	gormDB := provider.NewMysqlClient(conf)
+	db := provider.NewMysqlClient(conf)
 	sqlProvider := &job.SQLProvider{
 		Config: conf,
-		DB:     gormDB,
+		DB:     db,
 	}
 	return sqlProvider
 }
 
 // wire.go:
 
-var providerSet = wire.NewSet(provider.NewHttpClient, provider.NewRequestClient, provider.NewMysqlClient)
+var providerSet = wire.NewSet(provider.NewHttpClient, provider.NewRequestClient, provider.NewMysqlClient, provider.NewRedisClient, provider.NewEmailClient, service2.ProviderSet, app.CacheProviderSet, app.RepoProviderSet)

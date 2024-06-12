@@ -9,15 +9,20 @@ import (
 )
 
 type Common struct {
-	CommonService service.IEmailService
+	EmailService service.IEmailService
 }
 
-func (c *Common) SendEmailCode(ctx *ctx.Context) {
+func (c *Common) SendEmailCode(ctx *ctx.Context) error {
 	params := &web.SendEmailCodeRequest{}
 	if err := ctx.Context.ShouldBind(&params); err != nil {
-		response.ErrResponse(ctx.Context, myErr.BadRequest("", "请求参数错误！"))
-		return
+		return myErr.BadRequest("wrong_parameters", "请求参数错误！")
 	}
 
-	c.CommonService.Verify()
+	err := c.EmailService.Send(ctx.Ctx(), params.Channel, params.Email)
+	if err != nil {
+		return err
+	}
+
+	response.NorResponse(ctx.Context, &web.SendEmailCodeResponse{}, "发送成功！")
+	return nil
 }

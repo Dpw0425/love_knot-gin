@@ -26,13 +26,13 @@ func NewMysqlClient(conf *config.Config) *gorm.DB {
 	}), gormConfig)
 
 	if err != nil {
-		logger.Panicf("Mysql Connect Error: %v1", err)
+		logger.Panicf("Mysql Connect Error: %v!", err)
 		fmt.Println("Mysql Connect Error: ", err)
 		return nil
 	}
 
 	if db.Error != nil {
-		logger.Panicf("Database Error: %v1", err)
+		logger.Panicf("Database Error: %v!", err)
 		fmt.Println("Database Error: ", err)
 		return nil
 	}

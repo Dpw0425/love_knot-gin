@@ -5,14 +5,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/sjson"
 	"gopkg.in/natefinch/lumberjack.v2"
+	"love_knot/internal/app/api/handler"
 	"love_knot/internal/app/middleware"
 	"love_knot/internal/config"
 	myErr "love_knot/pkg/error"
 	"love_knot/pkg/response"
-	"net/http"
 )
 
-func NewRouter(conf *config.Config) *gin.Engine {
+func NewRouter(conf *config.Config, handler *handler.Handler) *gin.Engine {
 	router := gin.New()
 
 	accessFilterRule := middleware.NewAccessFilterRule()
@@ -29,13 +29,16 @@ func NewRouter(conf *config.Config) *gin.Engine {
 		Compress:   true,                                                        // 是否压缩/归档旧文件
 	}, accessFilterRule))
 
+	// capture panic and response server error
 	router.Use(gin.RecoveryWithWriter(gin.DefaultWriter, func(c *gin.Context, err any) {
 		response.ErrResponse(c, myErr.InternalServerError("", "系统错误，请重试!!!"))
 	}))
 
 	router.GET("/", func(c *gin.Context) {
-		response.NorResponse(c, http.StatusOK, gin.H{}, "hello world!")
+		response.NorResponse(c, gin.H{}, "hello world!")
 	})
+
+	RegisterWebRouter(conf.Jwt.Secret, router, handler.Web)
 
 	return router
 }

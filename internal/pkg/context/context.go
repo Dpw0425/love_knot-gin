@@ -77,7 +77,3 @@ func initMeta() map[string]any {
 
 	return meta
 }
-
-func (c *Context) Unauthorized(message string) error {
-
-}
