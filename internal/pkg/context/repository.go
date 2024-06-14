@@ -54,3 +54,13 @@ func (r Repo[T]) FindByIDs(ctx context.Context, ids []uint) ([]*T, error) {
 
 	return items, err
 }
+
+// Create 创建记录
+func (r Repo[T]) Create(ctx context.Context, data *T) error {
+	return r.DB.WithContext(ctx).Create(data).Error
+}
+
+// BatchCreation 批量创建
+func (r Repo[T]) BatchCreation(ctx context.Context, data []*T) error {
+	return r.DB.WithContext(ctx).Create(data).Error
+}

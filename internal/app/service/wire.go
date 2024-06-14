@@ -11,4 +11,7 @@ var ProviderSet = wire.NewSet(
 
 	wire.Struct(new(service.TemplateService), "*"),
 	wire.Bind(new(service.ITemplateService), new(*service.TemplateService)),
+
+	wire.Struct(new(service.UserService), "*"),
+	wire.Bind(new(service.IUserService), new(*service.UserService)),
 )

@@ -23,3 +23,11 @@ func (u *UserRepo) IsExist(ctx context.Context, email string) bool {
 	isExist, _ := u.Repo.IsExist(ctx, "email = ?", email)
 	return isExist
 }
+
+func (u *UserRepo) Create(ctx context.Context, user *model.User) error {
+	if err := u.Repo.Create(ctx, user); err != nil {
+		return err
+	}
+
+	return nil
+}

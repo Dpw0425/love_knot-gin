@@ -5,7 +5,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"love_knot/pkg/logger"
 	"love_knot/utils/encrypt"
-	"love_knot/utils/random"
+	"love_knot/utils/generator"
 	"os"
 	"time"
 )
@@ -34,7 +34,7 @@ func Load(filename string) *Config {
 		panic(fmt.Sprintf("解析 config.yaml 失败: %v1", err))
 	}
 
-	conf.sid = encrypt.Md5(fmt.Sprintf("%d%s", time.Now().UnixNano(), random.Random(6)))
+	conf.sid = encrypt.Md5(fmt.Sprintf("%d%s", time.Now().UnixNano(), generator.Random(6)))
 
 	return &conf
 }

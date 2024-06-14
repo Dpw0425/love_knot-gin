@@ -7,7 +7,7 @@ import (
 	"love_knot/internal/app/storage/repo"
 	"love_knot/pkg/email"
 	myErr "love_knot/pkg/error"
-	"love_knot/utils/random"
+	"love_knot/utils/generator"
 	"time"
 )
 
@@ -15,7 +15,8 @@ var _ IEmailService = (*EmailService)(nil)
 
 type IEmailService interface {
 	Send(ctx context.Context, channel string, email string) error
-	Verify(ctx context.Context, channel string, email string, code string)
+	Verify(ctx context.Context, channel string, email string, code string) bool
+	Delete(ctx context.Context, channel string, email string)
 }
 
 type EmailService struct {
@@ -41,7 +42,7 @@ func (e *EmailService) Send(ctx context.Context, channel string, to string) erro
 	}
 
 	// 生成验证码
-	code := random.Random(6)
+	code := generator.Random(6)
 	if err := e.Storage.Set(ctx, channel, to, code, 15*time.Minute); err != nil {
 		return myErr.BadRequest("", "ERROR: %s", err.Error())
 	}
@@ -72,6 +73,10 @@ func (e *EmailService) Send(ctx context.Context, channel string, to string) erro
 	return nil
 }
 
-func (e *EmailService) Verify(ctx context.Context, channel string, email string, code string) {
+func (e *EmailService) Verify(ctx context.Context, channel string, email string, code string) bool {
+	return e.Storage.Verify(ctx, channel, email, code)
+}
 
+func (e *EmailService) Delete(ctx context.Context, channel string, email string) {
+	_ = e.Storage.Del(ctx, channel, email)
 }

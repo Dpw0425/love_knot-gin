@@ -41,8 +41,16 @@ func NewHttpInjector(conf *config.Config) *api.AppProvider {
 	common := &v1.Common{
 		EmailService: emailService,
 	}
+	userService := &service.UserService{
+		UserRepo: userRepo,
+	}
+	user := &v1.User{
+		UserService:  userService,
+		EmailService: emailService,
+	}
 	webV1 := &web.V1{
 		Common: common,
+		User:   user,
 	}
 	webHandler := &web.Handler{
 		V1: webV1,
