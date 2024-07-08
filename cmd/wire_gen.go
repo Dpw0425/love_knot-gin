@@ -44,9 +44,24 @@ func NewHttpInjector(conf *config.Config) *api.AppProvider {
 	userService := &service.UserService{
 		UserRepo: userRepo,
 	}
+	source := repo.NewSource(db, client)
+	httpClient := provider.NewHttpClient()
+	requestClient := provider.NewRequestClient(httpClient)
+	ipAddressService := &service.IpAddressService{
+		Source: source,
+		Config: conf,
+		Client: requestClient,
+	}
+	deviceRepo := repo.NewDevice(db)
+	deviceService := &service.DeviceService{
+		DeviceRepo: deviceRepo,
+	}
 	user := &v1.User{
-		UserService:  userService,
-		EmailService: emailService,
+		Config:           conf,
+		UserService:      userService,
+		EmailService:     emailService,
+		IpAddressService: ipAddressService,
+		DeviceService:    deviceService,
 	}
 	webV1 := &web.V1{
 		Common: common,

@@ -13,8 +13,11 @@ var SQLProviderSet = wire.NewSet(
 
 var CacheProviderSet = wire.NewSet(
 	cache.NewEmailStorage,
+	cache.NewTokenSessionStorage,
 )
 
 var RepoProviderSet = wire.NewSet(
 	repo.NewUsers,
+	repo.NewSource,
+	repo.NewDevice,
 )

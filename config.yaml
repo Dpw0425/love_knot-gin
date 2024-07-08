@@ -2,6 +2,7 @@
 app:
   env: dev
   run_mode: debug
+  gao_de_key: 04cfb5ac488dd032b40cb590e7659ae7
 
 server:
   http: 8080

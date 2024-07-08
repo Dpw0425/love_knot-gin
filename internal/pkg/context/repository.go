@@ -64,3 +64,14 @@ func (r Repo[T]) Create(ctx context.Context, data *T) error {
 func (r Repo[T]) BatchCreation(ctx context.Context, data []*T) error {
 	return r.DB.WithContext(ctx).Create(data).Error
 }
+
+// FindByWhere 根据条件查询
+func (r Repo[T]) FindByWhere(ctx context.Context, where string, args ...any) (*T, error) {
+	var item *T
+	err := r.DB.WithContext(ctx).Where(where, args...).First(&item).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return item, nil
+}

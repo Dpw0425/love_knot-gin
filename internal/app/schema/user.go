@@ -7,3 +7,8 @@ type UserRegister struct {
 	Gender   int
 	Email    string
 }
+
+type UserLogin struct {
+	Email    string
+	Password string
+}

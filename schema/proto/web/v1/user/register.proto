@@ -6,12 +6,12 @@ option go_package = "web/v1/user;web";
 import "tagger/tagger.proto";
 
 message UserRegisterRequest {
-  string NickName = 1 [(tagger.tags) = "binding:\"required\""];
-  string Password = 2 [(tagger.tags) = "binding:\"required\""];
-  string Avatar = 3 [(tagger.tags) = "binding:\"required\""];
-  int32 Gender = 4 [(tagger.tags) = "binding:\"required,oneof=0 1 2\""];
-  string Email = 5 [(tagger.tags) = "binding:\"required\""];
-  string VerifyCode = 6 [(tagger.tags) = "binding:\"required\""];
+  string nickname = 1 [(tagger.tags) = "binding:\"required\""];
+  string password = 2 [(tagger.tags) = "binding:\"required\""];
+  string avatar = 3 [(tagger.tags) = "binding:\"required\""];
+  int32 gender = 4 [(tagger.tags) = "binding:\"required,oneof=0 1 2\""];
+  string email = 5 [(tagger.tags) = "binding:\"required\""];
+  string verify_code = 6 [(tagger.tags) = "binding:\"required\""];
 }
 
 message UserRegisterResponse {}

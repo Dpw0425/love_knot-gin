@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"gorm.io/gorm"
 	"love_knot/internal/app/schema"
 	"love_knot/internal/app/storage/model"
 	"love_knot/internal/app/storage/repo"
@@ -14,6 +15,8 @@ var _ IUserService = (*UserService)(nil)
 
 type IUserService interface {
 	Register(ctx context.Context, sur *schema.UserRegister) error
+	LoginByPassword(ctx context.Context, sul *schema.UserLogin) (*model.User, error)
+	GetUserByEmail(ctx context.Context, email string) (*model.User, error)
 }
 
 type UserService struct {
@@ -33,4 +36,34 @@ func (u *UserService) Register(ctx context.Context, sur *schema.UserRegister) er
 		Gender:   sur.Gender,
 		Email:    sur.Email,
 	})
+}
+
+func (u *UserService) LoginByPassword(ctx context.Context, sul *schema.UserLogin) (*model.User, error) {
+	user, err := u.UserRepo.FindByEmail(ctx, sul.Email)
+	if err != nil {
+		if myErr.Equal(err, gorm.ErrRecordNotFound) {
+			return nil, myErr.BadRequest("", "账号不存在！")
+		}
+
+		return nil, myErr.BadRequest("", err.Error())
+	}
+
+	if !encrypt.VerifyPassword(user.Password, sul.Password) {
+		return nil, myErr.BadRequest("", "密码错误！")
+	}
+
+	return user, nil
+}
+
+func (u *UserService) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
+	user, err := u.UserRepo.FindByEmail(ctx, email)
+	if err != nil {
+		if myErr.Equal(err, gorm.ErrRecordNotFound) {
+			return nil, myErr.BadRequest("", "账号不存在！")
+		}
+
+		return nil, myErr.BadRequest("", err.Error())
+	}
+
+	return user, nil
 }

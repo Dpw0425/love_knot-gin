@@ -19,7 +19,7 @@ func NewEmailStorage(redis *redis.Client) *EmailStorage {
 func (e *EmailStorage) Set(ctx context.Context, channel string, email string, code string, exp time.Duration) error {
 	_, err := e.redis.WithContext(ctx).Pipelined(func(pipe redis.Pipeliner) error {
 		pipe.Del(e.failRow(channel, email))
-		pipe.Set(e.Row(channel, email), code, exp)
+		pipe.Set(e.row(channel, email), code, exp)
 		return nil
 	})
 
@@ -27,11 +27,11 @@ func (e *EmailStorage) Set(ctx context.Context, channel string, email string, co
 }
 
 func (e *EmailStorage) Get(ctx context.Context, channel string, email string) (string, error) {
-	return e.redis.WithContext(ctx).Get(e.Row(channel, email)).Result()
+	return e.redis.WithContext(ctx).Get(e.row(channel, email)).Result()
 }
 
 func (e *EmailStorage) Del(ctx context.Context, channel string, email string) error {
-	return e.redis.WithContext(ctx).Del(e.Row(channel, email)).Err()
+	return e.redis.WithContext(ctx).Del(e.row(channel, email)).Err()
 }
 
 func (e *EmailStorage) Verify(ctx context.Context, channel string, email string, code string) bool {
@@ -47,8 +47,8 @@ func (e *EmailStorage) Verify(ctx context.Context, channel string, email string,
 	num := e.redis.WithContext(ctx).Incr(e.failRow(channel, email)).Val()
 	if num >= 5 {
 		_, _ = e.redis.WithContext(ctx).Pipelined(func(pipe redis.Pipeliner) error {
-			pipe.Del(e.Row(channel, email))
-			pipe.Del(e.Row(channel, email))
+			pipe.Del(e.row(channel, email))
+			pipe.Del(e.row(channel, email))
 			return nil
 		})
 	} else if num == 1 {
@@ -58,7 +58,7 @@ func (e *EmailStorage) Verify(ctx context.Context, channel string, email string,
 	return false
 }
 
-func (e *EmailStorage) Row(channel string, email string) string {
+func (e *EmailStorage) row(channel string, email string) string {
 	return fmt.Sprintf("love_knot:auth:email_code:%s:%s", channel, encrypt.Md5(email))
 }
 

@@ -57,7 +57,7 @@ func (m *UserRegisterRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for NickName
+	// no validation rules for Nickname
 
 	// no validation rules for Password
 

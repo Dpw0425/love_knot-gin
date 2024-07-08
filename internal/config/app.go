@@ -6,4 +6,5 @@ type App struct {
 	PublicKey  string   `json_utils:"-" yaml:"public_key"`
 	PrivateKey string   `json_utils:"-" yaml:"private_key"`
 	AdminEmail []string `json_utils:"admin_email"`
+	GaoDeKey   string   `json_utils:"gao_de_key" yaml:"gao_de_key" mapstructure:"gao_de_key"`
 }
