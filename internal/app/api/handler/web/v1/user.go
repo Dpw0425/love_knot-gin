@@ -102,6 +102,11 @@ func (u *User) Login(ctx *ctx.Context) error {
 		user = result
 	}
 
+	// TODO: VERIFY IF THE DEVICE IS AUTHORIZED
+	if !u.DeviceService.IsCommonDevice(ctx.Ctx(), user.UserID, ip) && params.VerifyCode == "" {
+		return myErr.Forbidden("", "非常用登录设备，请使用邮箱验证登录！")
+	}
+
 	_ = u.DeviceService.SetUserCommonDevice(ctx.Ctx(), user.UserID, ip, address, agent)
 
 	// TODO: PUSH USER LOGIN MESSAGE
@@ -109,18 +114,18 @@ func (u *User) Login(ctx *ctx.Context) error {
 	wg.Wait()
 	response.NorResponse(ctx.Context, &web.UserLoginResponse{
 		Type:        "Bearer",
-		AccessToken: u.token(user.ID),
+		AccessToken: u.token(user.UserID),
 		ExpiresIn:   strconv.FormatInt(u.Config.Jwt.ExpiresTime, 10),
 	}, "登录成功！")
 	return nil
 }
 
-func (u *User) token(uid uint) string {
+func (u *User) token(uid int64) string {
 	expiresAt := time.Now().Add(time.Second * time.Duration(u.Config.Jwt.ExpiresTime))
 
 	token, _ := jwt.GenerateToken("api", u.Config.Jwt.Secret, &jwt.Options{
 		ExpiresAt: jwt.NewNumericData(expiresAt),
-		ID:        strconv.Itoa(int(uid)),
+		ID:        strconv.FormatInt(uid, 10),
 		Issuer:    "love_knot.web",
 		IssuedAt:  jwt.NewNumericData(time.Now()),
 	})

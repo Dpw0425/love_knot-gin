@@ -44,11 +44,12 @@ func (e *EmailStorage) Verify(ctx context.Context, channel string, email string,
 		return true
 	}
 
+	// 三分钟内失败超过五次则删除该校验信息
 	num := e.redis.WithContext(ctx).Incr(e.failRow(channel, email)).Val()
 	if num >= 5 {
 		_, _ = e.redis.WithContext(ctx).Pipelined(func(pipe redis.Pipeliner) error {
 			pipe.Del(e.row(channel, email))
-			pipe.Del(e.row(channel, email))
+			pipe.Del(e.failRow(channel, email))
 			return nil
 		})
 	} else if num == 1 {
@@ -63,5 +64,5 @@ func (e *EmailStorage) row(channel string, email string) string {
 }
 
 func (e *EmailStorage) failRow(channel string, email string) string {
-	return fmt.Sprintf("love_knot:auth:email_code:%s:%s", channel, encrypt.Md5(email))
+	return fmt.Sprintf("love_knot:auth:email_code_fail:%s:%s", channel, encrypt.Md5(email))
 }

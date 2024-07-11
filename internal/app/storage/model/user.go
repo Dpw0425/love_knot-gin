@@ -10,6 +10,7 @@ type User struct {
 	Avatar   string `gorm:"column:avatar;NOT NULL" json:"avatar"`           // 头像
 	Gender   int    `gorm:"column:gender;default:0;NOT NULL" json:"gender"` // 0: 保密, 1: 男, 2: 女
 	Email    string `gorm:"column:email;NOT NULL" json:"email"`             // 邮箱
+	Status   int    `gorm:"column:status;default:0;NOT NULL" json:"status"` // 0: 可用, 1: 冻结, 2: 封禁
 }
 
 func (User) TableName() string {
