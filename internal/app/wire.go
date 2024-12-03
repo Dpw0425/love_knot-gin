@@ -20,4 +20,5 @@ var RepoProviderSet = wire.NewSet(
 	repo.NewUsers,
 	repo.NewSource,
 	repo.NewDevice,
+	repo.NewFriend,
 )

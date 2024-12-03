@@ -3,11 +3,12 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"love_knot/internal/app/api/handler/web"
+	"love_knot/internal/app/middleware"
 	ctx "love_knot/internal/pkg/context"
 )
 
 func RegisterWebRouter(secret string, router *gin.Engine, handler *web.Handler) {
-	// authorize := middleware.Auth(secret, "api")
+	authorizer := middleware.Auth(secret, "api")
 
 	v1 := router.Group("/api/v1")
 	{
@@ -20,6 +21,11 @@ func RegisterWebRouter(secret string, router *gin.Engine, handler *web.Handler) 
 		{
 			user.POST("/register", ctx.HandlerFunc(handler.V1.User.Register)) // 用户注册
 			user.POST("/login", ctx.HandlerFunc(handler.V1.User.Login))       // 用户登录
+		}
+
+		friend := v1.Group("/friend").Use(authorizer)
+		{
+			friend.GET("/list", ctx.HandlerFunc(handler.V1.Friend.List)) // 好友列表
 		}
 	}
 }

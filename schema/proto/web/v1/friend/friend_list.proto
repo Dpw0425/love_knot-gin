@@ -1,0 +1,20 @@
+syntax = "proto3";
+package web;
+
+option go_package = "web/v1/friend;web";
+
+import "tagger/tagger.proto";
+
+message FriendListRequest {
+}
+
+message FriendListResponse {
+  message Item {
+    int64 user_id = 1 [(tagger.tags) = "binding:\"required\""];
+    string nick_name = 2 [(tagger.tags) = "binding:\"required\""];
+    string avatar = 3 [(tagger.tags) = "binding:\"required\""];
+    int32 gender = 4 [(tagger.tags) = "binding:\"required\""];
+  }
+
+  repeated Item items = 1;
+}

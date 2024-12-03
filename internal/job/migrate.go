@@ -27,6 +27,7 @@ func Run(ctx *cli.Context, app *SQLProvider) error {
 		app.DB.AutoMigrate(&model.User{})
 		app.DB.AutoMigrate(&model.Device{})
 		app.DB.AutoMigrate(&model.Robot{})
+		app.DB.AutoMigrate(&model.Friend{})
 		fmt.Println("数据库表初始化成功！")
 		logger.Info("Databases Init Successful!")
 	}

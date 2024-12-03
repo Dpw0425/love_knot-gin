@@ -20,4 +20,7 @@ var ProviderSet = wire.NewSet(
 
 	wire.Struct(new(service.DeviceService), "*"),
 	wire.Bind(new(service.IDeviceService), new(*service.DeviceService)),
+
+	wire.Struct(new(service.FriendService), "*"),
+	wire.Bind(new(service.IFriendService), new(*service.FriendService)),
 )

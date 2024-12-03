@@ -63,9 +63,18 @@ func NewHttpInjector(conf *config.Config) *api.AppProvider {
 		IpAddressService: ipAddressService,
 		DeviceService:    deviceService,
 	}
+	friendRepo := repo.NewFriend(db)
+	friendService := &service.FriendService{
+		FriendRepo: friendRepo,
+	}
+	friend := &v1.Friend{
+		Config:        conf,
+		FriendService: friendService,
+	}
 	webV1 := &web.V1{
 		Common: common,
 		User:   user,
+		Friend: friend,
 	}
 	webHandler := &web.Handler{
 		V1: webV1,
